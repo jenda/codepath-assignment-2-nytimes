@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codepath.nytimesseach.model.Response;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -75,13 +76,13 @@ public class SearchActivity extends AppCompatActivity {
     @OnClick(R.id.searchButton)
     public void searchButtonClicked() {
         String query = searchEditText.getText().toString();
-
+        query = "android";
         Log.d("jenda", "query " + query);
 
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
         RequestParams params = new RequestParams();
-        params.put("api-key", "72b7f2dfb0764545a2e8378566e2d0af");
+        params.put("api-key", "8f987ade9ab543b782fdeb6dad48ada1");
         params.put("page", 0);
         params.put("q", query);
 
@@ -90,7 +91,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                Response resp = Response.fromJson(response);
                 Log.d("jenda", response.toString());
+                Log.d("jenda", "resp: " + resp.toString());
             }
         });
     }
