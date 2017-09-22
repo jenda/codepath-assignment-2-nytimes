@@ -14,11 +14,23 @@ import java.util.List;
 public class Response {
     private static Gson gson = new GsonBuilder().create();
 
-    String status;
-    String copyright;
-    InnerResponse response;
+    private String status;
+    private String copyright;
+    private InnerResponse response;
 
     public static Response fromJson(JSONObject obj) {
         return gson.fromJson(obj.toString(), Response.class);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getCopyright() {
+        return copyright;
+    }
+
+    public InnerResponse getResponse() {
+        return response;
     }
 }

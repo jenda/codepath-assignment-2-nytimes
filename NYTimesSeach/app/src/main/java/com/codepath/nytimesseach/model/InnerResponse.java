@@ -8,13 +8,15 @@ import java.util.List;
 
 public class InnerResponse {
 
-    public static class Metadata {
-        int hits;
-        int offset;
-        int time;
+    public List<Document> getDocs() {
+        return docs;
     }
 
-    List<Document> docs;
+    public InnerResponseMetadata getMeta() {
+        return meta;
+    }
 
-    Metadata meta;
+    private List<Document> docs;
+
+    private InnerResponseMetadata meta;
 }
