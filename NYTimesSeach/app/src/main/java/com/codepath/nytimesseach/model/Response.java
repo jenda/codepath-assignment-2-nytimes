@@ -12,14 +12,7 @@ import java.util.List;
  */
 
 public class Response {
-
-//      @SerializedName("color")
-
-    static class InnerResponse {
-        List<Document> docs;
-    }
-
-    static Gson gson = new GsonBuilder().create();
+    private static Gson gson = new GsonBuilder().create();
 
     String status;
     String copyright;
