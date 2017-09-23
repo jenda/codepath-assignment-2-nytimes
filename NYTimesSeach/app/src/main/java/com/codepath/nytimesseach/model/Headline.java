@@ -8,8 +8,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Headline {
 
-    String main;
+    private String main;
 
     @SerializedName("print_headline")
+    private
     String printHeadline;
+
+    public String getMain() {
+        return main;
+    }
+
+    public String getPrintHeadline() {
+        return printHeadline;
+    }
 }

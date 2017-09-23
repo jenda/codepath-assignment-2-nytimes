@@ -1,23 +1,26 @@
 package com.codepath.nytimesseach;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,26 +32,37 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.searchButton)
     Button searchButton;
 
-
     @BindView(R.id.queryEditText)
     EditText searchEditText;
+
+    @BindView(R.id.resultsRecyclerView)
+    RecyclerView resultsRecyclerView;
+
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
+    private ArticlesAdapter articlesAdapter;
+    private List<Document> documents;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        ButterKnife.bind(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(
+                2, StaggeredGridLayoutManager.VERTICAL);
 
-        ButterKnife.bind(this);
+        documents = new ArrayList<>();
+        articlesAdapter = new ArticlesAdapter(documents, getApplicationContext());
+
+        resultsRecyclerView.setAdapter(articlesAdapter);
+        resultsRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+
+        articlesAdapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -94,6 +108,10 @@ public class SearchActivity extends AppCompatActivity {
                 Response resp = Response.fromJson(response);
                 Log.d("jenda", response.toString());
                 Log.d("jenda", "resp: " + resp.toString());
+
+                documents.clear();
+                documents.addAll(resp.getResponse().getDocs());
+                articlesAdapter.notifyDataSetChanged();
             }
         });
     }

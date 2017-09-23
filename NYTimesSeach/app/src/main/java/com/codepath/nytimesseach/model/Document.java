@@ -2,7 +2,9 @@ package com.codepath.nytimesseach.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jan_spidlen on 9/20/17.
@@ -120,5 +122,34 @@ public class Document {
 
     public String getUri() {
         return uri;
+    }
+
+    public String getThumbnailOrImage() {
+        if (getMultimedia() == null) {
+            return null;
+        }
+
+        final Map<String, String> subTypesToUrls = new HashMap<>();
+
+        for(Multimedia multimedia: getMultimedia()) {
+            if (multimedia.getType().equals("image")) {
+                subTypesToUrls.put(multimedia.getSubtype(), multimedia.getUrl());
+            }
+        }
+
+        String url = null;
+        if (subTypesToUrls.containsKey("xlarge")) {
+            url = subTypesToUrls.get("xlarge");
+        } else if (subTypesToUrls.containsKey("wide")) {
+            url = subTypesToUrls.get("wide");
+        } else if (subTypesToUrls.containsKey("thumbnail")) {
+            url = subTypesToUrls.get("thumbnail");
+        }
+
+        if (url != null) {
+            return "https://www.nytimes.com/" + url;
+        }
+
+        return null;
     }
 }
