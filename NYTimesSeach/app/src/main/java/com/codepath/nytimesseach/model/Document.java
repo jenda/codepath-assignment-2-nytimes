@@ -17,8 +17,8 @@ public class Document {
     private String snippet;
     private Object blog;
     private String source;
-    private List<Object> multimedia;
-    private Object headline;
+    private List<Multimedia> multimedia;
+    private Headline headline;
     private List<Object> keywords;
 
     @SerializedName("pub_date")
@@ -70,11 +70,11 @@ public class Document {
         return source;
     }
 
-    public List<Object> getMultimedia() {
+    public List<Multimedia> getMultimedia() {
         return multimedia;
     }
 
-    public Object getHeadline() {
+    public Headline getHeadline() {
         return headline;
     }
 

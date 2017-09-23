@@ -5,12 +5,9 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
-import java.util.List;
-
 /**
  * Created by jan_spidlen on 9/20/17.
  */
-
 public class Response {
     private static Gson gson = new GsonBuilder().create();
 
@@ -18,8 +15,12 @@ public class Response {
     private String copyright;
     private InnerResponse response;
 
+    public static Response fromJson(String serializedObj) {
+        return gson.fromJson(serializedObj, Response.class);
+    }
+
     public static Response fromJson(JSONObject obj) {
-        return gson.fromJson(obj.toString(), Response.class);
+        return fromJson(obj.toString());
     }
 
     public String getStatus() {
