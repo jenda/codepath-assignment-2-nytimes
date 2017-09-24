@@ -7,4 +7,5 @@
     <dimen name="news_desk_margin">3dp</dimen>
     <dimen name="news_desk_left_margin">10dp</dimen>
     <dimen name="article_outer_layout_margin">5dp</dimen>
+    <dimen name="articles_recycler_view_margin_top">65dp</dimen>
 </resources>

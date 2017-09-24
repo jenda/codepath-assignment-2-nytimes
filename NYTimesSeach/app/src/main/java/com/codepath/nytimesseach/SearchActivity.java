@@ -35,11 +35,11 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity implements DataProvider.DataFetchedListener {
 
-    @BindView(R.id.searchButton)
-    Button searchButton;
-
-    @BindView(R.id.queryEditText)
-    EditText searchEditText;
+//    @BindView(R.id.searchButton)
+//    Button searchButton;
+//
+//    @BindView(R.id.queryEditText)
+//    EditText searchEditText;
 
     @BindView(R.id.resultsRecyclerView)
     RecyclerView resultsRecyclerView;
@@ -104,41 +104,41 @@ public class SearchActivity extends AppCompatActivity implements DataProvider.Da
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.searchButton)
-    public void searchButtonClicked() {
-        String query = searchEditText.getText().toString();
-        query = "android";
-        Log.d("jenda", "query " + query);
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
-        RequestParams params = new RequestParams();
-        params.put("api-key", "8f987ade9ab543b782fdeb6dad48ada1");
-        params.put("page", 0);
-        params.put("q", query);
-
-        client.get(url, params, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                Response resp = Response.fromJson(response);
-                Log.d("jenda", response.toString());
-                Log.d("jenda", "resp: " + resp.toString());
-
-                documents.clear();
-                documents.addAll(resp.getResponse().getDocs());
-                articlesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                Log.d("");
-                throwable.printStackTrace();
-            }
-
-        });
-    }
+//    @OnClick(R.id.searchButton)
+//    public void searchButtonClicked() {
+//        String query = searchEditText.getText().toString();
+//        query = "android";
+//        Log.d("jenda", "query " + query);
+//
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+//        RequestParams params = new RequestParams();
+//        params.put("api-key", "8f987ade9ab543b782fdeb6dad48ada1");
+//        params.put("page", 0);
+//        params.put("q", query);
+//
+//        client.get(url, params, new JsonHttpResponseHandler() {
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                super.onSuccess(statusCode, headers, response);
+//                Response resp = Response.fromJson(response);
+//                Log.d("jenda", response.toString());
+//                Log.d("jenda", "resp: " + resp.toString());
+//
+//                documents.clear();
+//                documents.addAll(resp.getResponse().getDocs());
+//                articlesAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+////                Log.d("");
+//                throwable.printStackTrace();
+//            }
+//
+//        });
+//    }
 
     private void transitionToModal(Fragment newFragment) {
         FragmentTransaction fragmentTransaction;
