@@ -49,10 +49,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         if (document.getNewsDesk() == null || document.getNewsDesk().equals("")) {
             holder.newsDeskTextView.setVisibility(View.GONE);
         } else {
+            holder.newsDeskTextView.setVisibility(View.VISIBLE);
             holder.newsDeskTextView.setText(document.getNewsDesk());
         }
 
         if (document.getThumbnailOrImage() != null) {
+            holder.previewImageView.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(Uri.parse(document.getThumbnailOrImage()))
                     .placeholder(R.drawable.ic_nocover)
