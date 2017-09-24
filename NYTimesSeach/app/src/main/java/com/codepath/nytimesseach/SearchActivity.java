@@ -17,6 +17,7 @@ import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.fragments.FilterFragment;
 import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
+import com.facebook.stetho.Stetho;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -53,6 +54,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
