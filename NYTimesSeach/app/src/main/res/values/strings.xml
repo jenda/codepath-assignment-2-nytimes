@@ -4,6 +4,8 @@
     <string name="enter_search_query">Enter seach query</string>
     <string name="search_button_text">Search</string>
     <string name="save_filters_button_text">Save filters</string>
+    <string name="save_date_button_text">Save date</string>
+    <string name="cancel_date_button_text">Cancel</string>
     <string name="choose_begin_date">Choose begin date</string>
     <string name="network_error_message">Network error</string>
     <string name="too_many_retries">Too many retries</string>

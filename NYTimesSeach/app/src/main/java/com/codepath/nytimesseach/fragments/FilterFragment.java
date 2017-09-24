@@ -1,17 +1,26 @@
 package com.codepath.nytimesseach.fragments;
 
 //import android.app.Fragment;
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
@@ -19,9 +28,14 @@ import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.utils.Utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 
 /**
  * Created by jan_spidlen on 9/23/17.
@@ -29,18 +43,36 @@ import butterknife.OnClick;
 
 public class FilterFragment extends Fragment {
 
+    public static Fragment newInstance(FilterSettings filterSettings) {
+        FilterFragment filterFragment = new FilterFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Utils.FILTERS, filterSettings);
+        filterFragment.setArguments(bundle);
+        return filterFragment;
+    }
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
     @BindView(R.id.orderPicker)
-    Spinner spinner;
+    Spinner orderPicker;
 
     @BindView(R.id.saveButton)
     Button saveButton;
 
+    @BindView(R.id.datePickerLayout)
+    RelativeLayout datePickerLayout;
+
+    @BindView(R.id.datePickerTextView)
+    TextView datePickerTextView;
+
+    @BindView(R.id.datePicker)
+    DatePicker datePicker;
+
     ArrayAdapter orderAdapter;
     FiltersController filtersController;
     FilterSettings filterSettings;
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,22 +90,44 @@ public class FilterFragment extends Fragment {
 
         filtersController.setData(filterSettings.getEmptyFilters());
 
-        orderAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,
+        orderAdapter = new ArrayAdapter(getContext(), R.layout.order_picker_item,
                 filterSettings.getAllOrderings());
         orderAdapter.notifyDataSetChanged();
-        spinner.setAdapter(orderAdapter);
+        orderPicker.setAdapter(orderAdapter);
 
-        spinner.setSelection(filterSettings.sortOrder.ordinal());
-        spinner.setOnItemSelectedListener(filtersController);
+        orderPicker.setSelection(filterSettings.sortOrder.ordinal());
+        orderPicker.setOnItemSelectedListener(filtersController);
+
+        maybeUpdateDateLabel();
         return view;
     }
 
-    public static Fragment newInstance(FilterSettings filterSettings) {
-        FilterFragment filterFragment = new FilterFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Utils.FILTERS, filterSettings);
-        filterFragment.setArguments(bundle);
-        return filterFragment;
+    private void maybeUpdateDateLabel() {
+        if (filterSettings.getBeginDate() != null) {
+            datePickerTextView.setText(simpleDateFormat.format(filterSettings.getBeginDate()));
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @OnClick(R.id.datePickerTextView)
+    protected void showDatePicker() {
+        saveButton.setVisibility(View.GONE);
+        datePickerLayout.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.saveDateButton)
+    protected void hideDatePickerAndSave() {
+        Date newBeginDate = new Date(datePicker.getYear() - 1900,
+                datePicker.getMonth(), datePicker.getDayOfMonth());
+        filterSettings.setBeginDate(newBeginDate);
+        maybeUpdateDateLabel();
+        hideDatePicker();
+    }
+
+    @OnClick(R.id.cancelDateButton)
+    protected void hideDatePicker() {
+        saveButton.setVisibility(View.VISIBLE);
+        datePickerLayout.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.saveButton)

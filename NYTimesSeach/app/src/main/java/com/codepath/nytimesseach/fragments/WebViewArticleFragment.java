@@ -47,11 +47,11 @@ public class WebViewArticleFragment extends Fragment {
         webview.setWebViewClient(new OverridingWebViewClient());
 
         // Zooming and layout responsiveness.
-//        webview.getSettings().setUseWideViewPort(true);
-//        webview.getSettings().setLoadWithOverviewMode(true);
-//        webview.getSettings().setSupportZoom(true);
-//        webview.getSettings().setBuiltInZoomControls(true);
-//        webview.getSettings().setDisplayZoomControls(false);
+        webview.getSettings().setUseWideViewPort(true);
+        webview.getSettings().setLoadWithOverviewMode(true);
+        webview.getSettings().setSupportZoom(true);
+        webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setDisplayZoomControls(false);
 
         Log.d("jenda", "weburl: " + document.getWebUrl());
         // Load the initial URL
@@ -62,7 +62,6 @@ public class WebViewArticleFragment extends Fragment {
     public static WebViewArticleFragment newInstance(Document document) {
         WebViewArticleFragment webViewArticleFragment = new WebViewArticleFragment();
         Bundle bundle = new Bundle();
-//        bundle.putSerializable(DOC_ID, document);
         bundle.putParcelable(DOC_ID, Parcels.wrap(document));
         webViewArticleFragment.setArguments(bundle);
         return webViewArticleFragment;

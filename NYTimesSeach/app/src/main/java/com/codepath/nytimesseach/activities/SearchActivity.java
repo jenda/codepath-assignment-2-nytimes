@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.codepath.nytimesseach.R;
@@ -37,9 +38,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.R.id.message;
-import static android.support.design.widget.Snackbar.make;
 
 public class SearchActivity extends AppCompatActivity implements
         DataFetchedListener, ItemClickSupport.OnItemClickListener {

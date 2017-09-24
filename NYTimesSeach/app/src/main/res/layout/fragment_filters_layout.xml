@@ -5,20 +5,23 @@
     android:layout_height="match_parent"
     android:background="@color/offWhite">
 
-    <EditText
-        android:id="@+id/datePicker"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/datePickerTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:ems="10"
+        android:layout_centerHorizontal="true"
         android:hint="@string/choose_begin_date"
-        android:inputType="date" />
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/date_text_view_size"
+        android:layout_margin="@dimen/news_desk_margin"/>
 
     <Spinner
         android:id="@+id/orderPicker"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/datePicker"
-        android:layout_height="wrap_content" />
+        android:layout_below="@+id/datePickerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -39,5 +42,58 @@
         android:layout_alignParentRight="true"
         android:background="@color/colorPrimary"
         android:textColor="@color/offWhite"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/datePickerLayout"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/offWhite">
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:headerBackground="@color/colorPrimaryDark"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            >
+            <View android:id="@+id/dividerView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerInParent="true"/>
+            <Button
+                android:id="@+id/cancelDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel_date_button_text"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@id/dividerView"
+                android:layout_marginRight="@dimen/date_picker_button_margin"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/offWhite"/>
+            <Button
+                android:layout_marginLeft="@dimen/date_picker_button_margin"
+                android:id="@+id/saveDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_date_button_text"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignLeft="@id/dividerView"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/offWhite"/>
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

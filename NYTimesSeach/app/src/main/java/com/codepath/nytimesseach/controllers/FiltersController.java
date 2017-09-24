@@ -9,15 +9,13 @@ import com.airbnb.epoxy.Typed2EpoxyController;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.viewmodels.EpoxyCheckBoxModel_;
-//import com.codepath.nytimesseach.viewmodels.EpoxyCheckBoxModel_;
-//import com.codepath.nytimesseach.viewmodels.EpoxyCheckBox;
-//import com.codepath.nytimesseach.viewmodels.EpoxyCheckBoxModel_;
 
 /**
  * Created by jan_spidlen on 9/23/17.
  */
 
-public class FiltersController extends TypedEpoxyController<FilterSettings> implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+public class FiltersController extends TypedEpoxyController<FilterSettings>
+        implements AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     private final Context context;
     private final FilterSettings filterSettings;
@@ -42,7 +40,7 @@ public class FiltersController extends TypedEpoxyController<FilterSettings> impl
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        FilterSettings.INSTANCE.sortOrder = FilterSettings.getAllOrderings()[position];
+        filterSettings.sortOrder = FilterSettings.getAllOrderings()[position];
     }
 
     @Override

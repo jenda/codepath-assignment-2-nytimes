@@ -80,6 +80,14 @@ public class FilterSettings implements Serializable {
 
     private Date beginDate;
 
+    public void setBeginDate(Date date) {
+        this.beginDate = date;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
     private Set<NewsDesk> selectedNewsDesks;
 
     public boolean isSelected(NewsDesk newsDesk) {
