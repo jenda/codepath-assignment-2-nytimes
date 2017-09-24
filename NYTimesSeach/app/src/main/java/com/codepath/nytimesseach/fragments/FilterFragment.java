@@ -83,6 +83,6 @@ public class FilterFragment extends Fragment {
     }
 
     private void onFiltersSaved() {
-        DataProvider.INSTANCE.fetchNew(filterSettings);
+        DataProvider.INSTANCE.fetchFresh(filterSettings);
     }
 }

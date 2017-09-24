@@ -6,5 +6,4 @@ package com.codepath.nytimesseach.utils;
 
 public class Constants {
     public static final String FILTERS = "filters";
-
 }

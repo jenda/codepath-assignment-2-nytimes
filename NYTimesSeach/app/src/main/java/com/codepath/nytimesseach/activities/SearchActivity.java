@@ -14,6 +14,8 @@ import android.view.View;
 
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.adapters.ArticlesAdapter;
+import com.codepath.nytimesseach.controllers.EndlessRecyclerViewScrollListener;
+import com.codepath.nytimesseach.data.DataFetchedListener;
 import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.fragments.WebViewArticleFragment;
 import com.codepath.nytimesseach.fragments.FilterFragment;
@@ -29,13 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchActivity extends AppCompatActivity implements
-        DataProvider.DataFetchedListener, ItemClickSupport.OnItemClickListener {
-
-//    @BindView(R.id.searchButton)
-//    Button searchButton;
-//
-//    @BindView(R.id.queryEditText)
-//    EditText searchEditText;
+        DataFetchedListener, ItemClickSupport.OnItemClickListener {
 
     @BindView(R.id.resultsRecyclerView)
     RecyclerView resultsRecyclerView;
@@ -46,6 +42,7 @@ public class SearchActivity extends AppCompatActivity implements
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private ArticlesAdapter articlesAdapter;
     private List<Document> documents;
+    EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
 
     @Override
@@ -68,13 +65,21 @@ public class SearchActivity extends AppCompatActivity implements
         resultsRecyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         articlesAdapter.notifyDataSetChanged();
-//        searchButtonClicked();
         DataProvider.INSTANCE = new DataProvider(this);
-//        DataProvider.INSTANCE
         DataProvider.INSTANCE.fetchMoreInitial();
 
         ItemClickSupport.addTo(resultsRecyclerView).setOnItemClickListener(this);
 
+        endlessRecyclerViewScrollListener =
+                new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.d("jenda", "onLoadMore");
+                DataProvider.INSTANCE.fetchMore(FilterSettings.INSTANCE);
+            }
+        };
+
+        resultsRecyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
     }
 
     @Override
@@ -102,42 +107,6 @@ public class SearchActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-//    @OnClick(R.id.searchButton)
-//    public void searchButtonClicked() {
-//        String query = searchEditText.getText().toString();
-//        query = "android";
-//        Log.d("jenda", "query " + query);
-//
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
-//        RequestParams params = new RequestParams();
-//        params.put("api-key", "8f987ade9ab543b782fdeb6dad48ada1");
-//        params.put("page", 0);
-//        params.put("q", query);
-//
-//        client.get(url, params, new JsonHttpResponseHandler() {
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                super.onSuccess(statusCode, headers, response);
-//                Response resp = Response.fromJson(response);
-//                Log.d("jenda", response.toString());
-//                Log.d("jenda", "resp: " + resp.toString());
-//
-//                documents.clear();
-//                documents.addAll(resp.getResponse().getDocs());
-//                articlesAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-////                Log.d("");
-//                throwable.printStackTrace();
-//            }
-//
-//        });
-//    }
-
     private void transitionToModal(Fragment newFragment) {
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getSupportFragmentManager().beginTransaction()
@@ -155,14 +124,13 @@ public class SearchActivity extends AppCompatActivity implements
         documents.clear();
         documents.addAll(docs);
         articlesAdapter.notifyDataSetChanged();
+        endlessRecyclerViewScrollListener.resetState();
     }
 
     @Override
     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
         Document doc = documents.get(position);
         Log.d("jenda", "Opening doc: " + doc.getSnippet());
-
-//        WebViewArticleFragment articleFragment = WebViewArticleFragment.newInstance(doc);
         transitionToModal(WebViewArticleFragment.newInstance(doc));
     }
 }
