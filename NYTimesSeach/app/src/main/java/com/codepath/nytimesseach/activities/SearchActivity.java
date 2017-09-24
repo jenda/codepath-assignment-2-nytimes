@@ -1,5 +1,6 @@
 package com.codepath.nytimesseach.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -40,7 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchActivity extends AppCompatActivity implements
-        DataFetchedListener, ItemClickSupport.OnItemClickListener {
+        DataFetchedListener, ItemClickSupport.OnItemClickListener, ItemClickSupport.OnItemLongClickListener {
 
     @BindView(R.id.resultsRecyclerView)
     RecyclerView resultsRecyclerView;
@@ -55,7 +56,6 @@ public class SearchActivity extends AppCompatActivity implements
     private ArticlesAdapter articlesAdapter;
     private List<Document> documents;
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class SearchActivity extends AppCompatActivity implements
         DataProvider.INSTANCE.fetchMoreInitial();
 
         ItemClickSupport.addTo(resultsRecyclerView).setOnItemClickListener(this);
+        ItemClickSupport.addTo(resultsRecyclerView).setOnItemLongClickListener(this);
 
         endlessRecyclerViewScrollListener =
                 new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
@@ -187,5 +188,19 @@ public class SearchActivity extends AppCompatActivity implements
         Document doc = documents.get(position);
         Log.d("jenda", "Opening doc: " + doc.getSnippet());
         transitionToModal(WebViewArticleFragment.newInstance(doc));
+    }
+
+    @Override
+    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+        Document doc = documents.get(position);
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, doc.getWebUrl());
+        shareIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareIntent,
+                getResources().getString(R.string.share_link)));
+
+        return true;
     }
 }

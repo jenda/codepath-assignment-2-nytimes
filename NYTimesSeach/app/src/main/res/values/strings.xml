@@ -12,4 +12,5 @@
     <string name="data_retrieval_failed">Data retrieval failed</string>
     <string name="internet_is_not_accessible">Internet not accessible</string>
     <string name="ok">Ok</string>
+    <string name="share_link">Share link with others...</string>
 </resources>
