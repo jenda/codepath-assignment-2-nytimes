@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NYTimesSeach</string>
+    <string name="app_name">Jan\'s news browser</string>
     <string name="action_settings">Settings</string>
     <string name="enter_search_query">Enter seach query</string>
     <string name="search_button_text">Search</string>
