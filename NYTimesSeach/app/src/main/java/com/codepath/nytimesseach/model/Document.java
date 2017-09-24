@@ -2,6 +2,7 @@ package com.codepath.nytimesseach.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  * Created by jan_spidlen on 9/20/17.
  */
 
-public class Document {
+public class Document implements Serializable {
 
     @SerializedName("web_url")
     private

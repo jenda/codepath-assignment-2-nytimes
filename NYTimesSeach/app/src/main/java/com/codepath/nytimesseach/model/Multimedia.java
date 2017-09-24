@@ -1,10 +1,12 @@
 package com.codepath.nytimesseach.model;
 
+import java.io.Serializable;
+
 /**
  * Created by jan_spidlen on 9/22/17.
  */
 
-public class Multimedia {
+public class Multimedia implements Serializable {
 
     private String type;
     private String subtype; // xlarge, wide, thumbnail

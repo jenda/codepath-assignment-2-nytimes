@@ -10,30 +10,23 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.View;
 
 import com.codepath.nytimesseach.data.DataProvider;
+import com.codepath.nytimesseach.fragments.WebViewArticleFragment;
 import com.codepath.nytimesseach.fragments.FilterFragment;
 import com.codepath.nytimesseach.model.Document;
-import com.codepath.nytimesseach.model.Response;
 import com.codepath.nytimesseach.settings.FilterSettings;
+import com.codepath.nytimesseach.utils.ItemClickSupport;
 import com.facebook.stetho.Stetho;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
-public class SearchActivity extends AppCompatActivity implements DataProvider.DataFetchedListener {
+public class SearchActivity extends AppCompatActivity implements DataProvider.DataFetchedListener, ItemClickSupport.OnItemClickListener {
 
 //    @BindView(R.id.searchButton)
 //    Button searchButton;
@@ -76,6 +69,8 @@ public class SearchActivity extends AppCompatActivity implements DataProvider.Da
         DataProvider.INSTANCE = new DataProvider(this);
 //        DataProvider.INSTANCE
         DataProvider.INSTANCE.fetchMoreInitial();
+
+        ItemClickSupport.addTo(resultsRecyclerView).setOnItemClickListener(this);
 
     }
 
@@ -157,5 +152,14 @@ public class SearchActivity extends AppCompatActivity implements DataProvider.Da
         documents.clear();
         documents.addAll(docs);
         articlesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+        Document doc = documents.get(position);
+        Log.d("jenda", "Opening doc: " + doc.getSnippet());
+
+//        WebViewArticleFragment articleFragment = WebViewArticleFragment.newInstance(doc);
+        transitionToModal(WebViewArticleFragment.newInstance(doc));
     }
 }
