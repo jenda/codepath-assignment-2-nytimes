@@ -22,6 +22,18 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
+        android:id="@+id/newsDeskTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/news_desk_text_size"
+        android:textColor="@color/offWhite"
+        android:background="@color/toolbarBackground"
+        android:textAllCaps="true"
+        android:layout_marginLeft="@dimen/news_desk_left_margin"
+        android:padding="@dimen/news_desk_padding"
+        tools:text="Sports" />
+
+    <TextView
         android:id="@+id/snippetTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

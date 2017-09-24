@@ -47,6 +47,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         holder.titleTextView.setText(document.getHeadline().getMain());
         holder.snippetTextView.setText(document.getSnippet());
 
+        if (document.getNewsDesk() == null || document.getNewsDesk().equals("")) {
+            holder.newsDeskTextView.setVisibility(View.GONE);
+        } else {
+            holder.newsDeskTextView.setText(document.getNewsDesk());
+        }
+
         if (document.getThumbnailOrImage() != null) {
             Glide.with(context)
                     .load(Uri.parse(document.getThumbnailOrImage()))
@@ -72,6 +78,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
 
         @BindView(R.id.snippetTextView)
         protected TextView snippetTextView;
+
+        @BindView(R.id.newsDeskTextView)
+        protected TextView newsDeskTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);

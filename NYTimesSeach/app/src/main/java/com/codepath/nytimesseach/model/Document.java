@@ -33,7 +33,7 @@ public class Document {
 
     @SerializedName("new_desk")
     private
-    String newDesk;
+    String newsDesk;
 
     @SerializedName("section_name")
     private
@@ -92,8 +92,8 @@ public class Document {
         return documentType;
     }
 
-    public String getNewDesk() {
-        return newDesk;
+    public String getNewsDesk() {
+        return newsDesk;
     }
 
     public String getSectionName() {

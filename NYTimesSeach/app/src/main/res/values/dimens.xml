@@ -1,5 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="title_text_view_size">24dp</dimen>
+    <dimen name="news_desk_text_size">14dp</dimen>
     <dimen name="article_item_padding">10dp</dimen>
+    <dimen name="news_desk_padding">3dp</dimen>
+    <dimen name="news_desk_left_margin">10dp</dimen>
 </resources>

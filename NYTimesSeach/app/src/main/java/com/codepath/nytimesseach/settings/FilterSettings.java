@@ -40,7 +40,8 @@ public class FilterSettings implements Serializable {
         None("None"),
         ARTS("Arts"),
         SPORTS("Sports"),
-        SMARTER_LIVING("Smarter Living");
+        LIVING("Living"),
+        FOREIGN("Foreign");
 
         private final String value;
         private NewsDesk(String value) {
