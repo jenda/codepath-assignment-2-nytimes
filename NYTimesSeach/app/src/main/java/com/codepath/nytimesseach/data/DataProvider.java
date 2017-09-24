@@ -1,16 +1,15 @@
 package com.codepath.nytimesseach.data;
 
 import android.util.Log;
-import android.util.StringBuilderPrinter;
 
+import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
 import com.codepath.nytimesseach.settings.FilterSettings;
-import com.codepath.nytimesseach.utils.Constants;
+import com.codepath.nytimesseach.utils.Utils;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +25,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class DataProvider {
+
+    class RetryCounter {
+        int counter;
+    }
 
     private static Set<String> BLACK_LISTED_IDS = ImmutableSet.of(
             "56e0ea3e38f0d80718d563b2",
@@ -51,6 +54,7 @@ public class DataProvider {
     private Call<Response> call = null;
     private boolean hasMore = true;
     private long lastAttempt = System.currentTimeMillis();
+    private String query = null;
 
     public DataProvider(DataFetchedListener dataFetchedListener) {
         this.dataFetchedListener = dataFetchedListener;
@@ -70,7 +74,7 @@ public class DataProvider {
             for(FilterSettings.NewsDesk newsDesk: settings.getSelectedNewsDesks()) {
                 sb.append("\"");
                 sb.append(newsDesk.toString());
-                sb.append("\"");
+                sb.append("\" ");
             }
             sb.append(")");
         }
@@ -83,6 +87,9 @@ public class DataProvider {
         return fg;
     }
 
+    public synchronized void setQuery(String query) {
+        this.query = query;
+    }
     public synchronized void fetchMoreInitial() {
         fetchFresh(FilterSettings.getEmptyFilters());
     }
@@ -90,22 +97,20 @@ public class DataProvider {
 
     public synchronized void fetchFresh(FilterSettings settings) {
         clearBuffers();
-        fetchMore(0, null, settings);
+        fetchMore(0, settings);
     }
 
-    public synchronized void fetchMore(String query, FilterSettings settings) {
+    public synchronized void fetchMore(FilterSettings settings) {
         if (call != null && !call.isExecuted() && !call.isCanceled()) {
             Log.d("jenda", "returning");
             return;
         }
-        fetchMore(currentPage, query, settings);
+        fetchMore(currentPage, settings);
     }
-    class Counter {
-        int counter;
-    }
-    public synchronized void fetchMore(int page, String query, FilterSettings settings) {
-        // TODO: finish data and sorting.
-
+    public synchronized void fetchMore(int page, FilterSettings settings) {
+        if ("".equals(query)) {
+            query = null;
+        }
         if (!hasMore && lastAttempt > (System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(15))) {
             Log.d("jenda", "too soon");
             return;
@@ -120,18 +125,20 @@ public class DataProvider {
 
         Log.d("jenda:", "page " +  page + "");
         Log.d("jenda:", "fg " +  fg + "");
+        Log.d("jenda:", "query " +  query + "");
 
-        final Counter retryCounter = new Counter();
+        final RetryCounter retryCounter = new RetryCounter();
 
         call = apiService.getDocs(query, page, API_KEY, fg);
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
 
-                if (response.code() == Constants.HTTP_TOO_MANY_REQUESTS) {
+                if (response.code() == Utils.HTTP_TOO_MANY_REQUESTS) {
                     Log.d("jenda:", " retrying ...");
                     if (retryCounter.counter++ > 3) {
-                        throw new RuntimeException("too many retries");
+                        dataFetchedListener.onErrorOccurred(R.string.too_many_retries);
+                        return;
                     }
                     try {
                         Thread.currentThread().sleep(retryCounter.counter * 500);
@@ -140,15 +147,18 @@ public class DataProvider {
                     }
                     call.clone().enqueue(this);
                     return;
+                } else if (response.code() != Utils.HTTP_OK) {
+                    dataFetchedListener.onErrorOccurred(R.string.data_retrieval_failed);
+                    return;
                 }
 
-                Log.d("jenda", "isSuccess: " + response.isSuccessful() + "");
-                Log.d("jenda", "code: " + response.code() + "");
-                Response response1 = response.body();
-                Log.d("jenda", response1.getStatus());
-                Log.d("jenda", "size: " + response1.getResponse().getDocs().size());
-                List<Document> docs = response1.getResponse().getDocs();
+                Response internalResponse = response.body();
+                List<Document> docs = internalResponse.getResponse().getDocs();
 
+//                Log.d("jenda", "isSuccess: " + response.isSuccessful() + "");
+//                Log.d("jenda", "code: " + response.code() + "");
+//                Log.d("jenda", internalResponse.getStatus());
+//                Log.d("jenda", "size: " + internalResponse.getResponse().getDocs().size());
                 // Dedup and filter out known bad articles.
                 for(Document doc: docs) {
                     if (!BLACK_LISTED_IDS.contains(doc.getId())
@@ -169,6 +179,7 @@ public class DataProvider {
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
+                dataFetchedListener.onErrorOccurred(R.string.network_error_message);
                 t.printStackTrace();
             }
         });

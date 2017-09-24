@@ -17,7 +17,7 @@ import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
 import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.settings.FilterSettings;
-import com.codepath.nytimesseach.utils.Constants;
+import com.codepath.nytimesseach.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +50,7 @@ public class FilterFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        filterSettings = (FilterSettings)this.getArguments().getSerializable(Constants.FILTERS);
+        filterSettings = (FilterSettings)this.getArguments().getSerializable(Utils.FILTERS);
 
         filtersController = new FiltersController(this.getContext(), filterSettings);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -71,7 +71,7 @@ public class FilterFragment extends Fragment {
     public static Fragment newInstance(FilterSettings filterSettings) {
         FilterFragment filterFragment = new FilterFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.FILTERS, filterSettings);
+        bundle.putSerializable(Utils.FILTERS, filterSettings);
         filterFragment.setArguments(bundle);
         return filterFragment;
     }
