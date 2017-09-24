@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
@@ -25,7 +27,13 @@ public class FilterFragment extends Fragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.orderPicker)
+    Spinner spinner;
+
+    ArrayAdapter orderAdapter;
     FiltersController filtersController;
+    FilterSettings filterSettings = FilterSettings.getEmptyFilters();
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -38,9 +46,12 @@ public class FilterFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(filtersController.getAdapter());
 
-//        filtersController.req
-//        recyclerView.requestModelBuild();
-        filtersController.setData(FilterSettings.getEmptyFilters());
+        filtersController.setData(filterSettings.getEmptyFilters());
+
+        orderAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1,
+                filterSettings.getAllOrderings());
+        orderAdapter.notifyDataSetChanged();
+        spinner.setAdapter(orderAdapter);
         return view;
     }
 

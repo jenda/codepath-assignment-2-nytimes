@@ -14,7 +14,9 @@ import android.widget.ImageView;
 
 import com.airbnb.epoxy.EpoxyHolder;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
+import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelView;
+import com.airbnb.epoxy.TextProp;
 import com.codepath.nytimesseach.R;
 
 import butterknife.BindView;
@@ -25,8 +27,8 @@ import butterknife.ButterKnife;
  */
 
 @ModelView(defaultLayout = R.layout.model_checkbox)
-public class EpoxyCheckBox extends CheckBox//EpoxyModelWithHolder<EpoxyCheckBox.CheckBoxViewHolder> {
-{
+public class EpoxyCheckBox extends CheckBox {
+
     public EpoxyCheckBox(@NonNull Context context) {
         super(context);
     }
@@ -39,25 +41,8 @@ public class EpoxyCheckBox extends CheckBox//EpoxyModelWithHolder<EpoxyCheckBox.
         super(context, attrs, defStyleAttr);
     }
 
-
-//    @Override
-//    protected CheckBoxViewHolder createNewHolder() {
-//        return null;
-//    }
-//
-//    @Override
-//    protected int getDefaultLayout() {
-//        return 0;
-//    }
-
-    static class CheckBoxViewHolder extends EpoxyHolder {
-        @BindView(R.id.checkBox)
-
-        CheckBox checkBox;
-        @CallSuper
-        @Override
-        protected void bindView(View itemView) {
-            ButterKnife.bind(this, itemView);
-        }
+    @ModelProp
+    public void setText(String text) {
+        super.setText(text);
     }
 }

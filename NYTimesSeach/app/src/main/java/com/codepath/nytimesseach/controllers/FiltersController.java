@@ -24,8 +24,12 @@ public class FiltersController extends TypedEpoxyController<FilterSettings> {
 
     @Override
     protected void buildModels(FilterSettings data) {
-        new EpoxyCheckBoxModel_()
-                .id("blabla")
-                .addTo(this);
+        for(FilterSettings.NewsDesk newsDesk: data.getAllowedNewsDesks()) {
+            String name = newsDesk.toString();
+            new EpoxyCheckBoxModel_()
+                    .id(name)
+                    .text(name)
+                    .addTo(this);
+        }
     }
 }
