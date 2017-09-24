@@ -75,7 +75,7 @@ public class SearchActivity extends AppCompatActivity implements
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.d("jenda", "onLoadMore");
-                DataProvider.INSTANCE.fetchMore("", FilterSettings.INSTANCE);
+                DataProvider.INSTANCE.fetchMore(null, FilterSettings.INSTANCE);
             }
         };
 

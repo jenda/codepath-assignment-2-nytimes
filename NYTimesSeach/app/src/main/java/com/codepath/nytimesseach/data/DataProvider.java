@@ -75,7 +75,12 @@ public class DataProvider {
             sb.append(")");
         }
         // TODO: finish data and sorting.
-        return sb.toString();
+
+        String fg = sb.toString();
+        if (fg == null || "".equals(fg)) {
+            return null;
+        }
+        return fg;
     }
 
     public synchronized void fetchMoreInitial() {
