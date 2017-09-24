@@ -1,19 +1,22 @@
 package com.codepath.nytimesseach.settings;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-
-import static android.R.attr.name;
-import static android.R.attr.value;
+import java.util.Set;
 
 /**
  * Created by jan_spidlen on 9/23/17.
  */
 
-public class FilterSettings {
+public class FilterSettings implements Serializable {
 
-    public SortOrder[] getAllOrderings() {
+    public static SortOrder[] getAllOrderings() {
         return SortOrder.values();
     }
 
@@ -26,7 +29,7 @@ public class FilterSettings {
         SortOrder(String value) {
             this.value = value;
         }
-        
+
         @Override
         public String toString() {
             return value;
@@ -62,6 +65,10 @@ public class FilterSettings {
                allowedNewsDesks.add(newsDesk);
            }
        }
+
+        selectedNewsDesks = new HashSet<>();
+        sortOrder = SortOrder.NewestFirst;
+        beginDate = null;
     }
 
     public List<NewsDesk> getAllowedNewsDesks() {
@@ -70,11 +77,23 @@ public class FilterSettings {
 
     public SortOrder sortOrder;
 
-    public Date beginDate;
+    private Date beginDate;
+
+    private Set<NewsDesk> selectedNewsDesks;
+
+    public boolean isSelected(NewsDesk newsDesk) {
+        return selectedNewsDesks.contains(newsDesk);
+    }
+
+    public boolean select(NewsDesk newsDesk) {
+        return selectedNewsDesks.add(newsDesk);
+    }
+
+    public boolean deselect(NewsDesk newsDesk) {
+        return selectedNewsDesks.remove(newsDesk);
+    }
 
     public static FilterSettings INSTANCE = new FilterSettings();
-
-
 
     public static FilterSettings getEmptyFilters() {
         return new FilterSettings();

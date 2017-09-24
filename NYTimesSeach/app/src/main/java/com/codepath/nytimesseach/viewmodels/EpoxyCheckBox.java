@@ -22,6 +22,9 @@ import com.codepath.nytimesseach.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.R.attr.tag;
+import static com.airbnb.epoxy.ModelProp.Option.DoNotHash;
+
 /**
  * Created by jan_spidlen on 9/23/17.
  */
@@ -44,5 +47,20 @@ public class EpoxyCheckBox extends CheckBox {
     @ModelProp
     public void setText(String text) {
         super.setText(text);
+    }
+
+    @ModelProp
+    public void setChecked(boolean checked) {
+        super.setChecked(checked);
+    }
+
+    @ModelProp(DoNotHash)
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
+        super.setOnCheckedChangeListener(listener);
+    }
+
+    @ModelProp(DoNotHash)
+    public void setTag(Object tag) {
+        super.setTag(tag);
     }
 }

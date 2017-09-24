@@ -17,6 +17,7 @@ import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.fragments.FilterFragment;
 import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
+import com.codepath.nytimesseach.settings.FilterSettings;
 import com.facebook.stetho.Stetho;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -92,7 +93,7 @@ public class SearchActivity extends AppCompatActivity {
 
         if (id == R.id.action_filter) {
             Log.d("jenda", "filter button clicked");
-            transitionToModal(FilterFragment.newInstance());
+            transitionToModal(FilterFragment.newInstance(FilterSettings.INSTANCE));
             return true;
         } else if (id == R.id.action_search) {
             Log.d("jenda", "search button clicked");

@@ -10,14 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
 import com.codepath.nytimesseach.settings.FilterSettings;
+import com.codepath.nytimesseach.utils.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by jan_spidlen on 9/23/17.
@@ -31,9 +34,13 @@ public class FilterFragment extends Fragment {
     @BindView(R.id.orderPicker)
     Spinner spinner;
 
+    @BindView(R.id.saveButton)
+    Button saveButton;
+
     ArrayAdapter orderAdapter;
     FiltersController filtersController;
-    FilterSettings filterSettings = FilterSettings.getEmptyFilters();
+    FilterSettings filterSettings;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -42,7 +49,9 @@ public class FilterFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        filtersController = new FiltersController(this.getContext());
+        filterSettings = (FilterSettings)this.getArguments().getSerializable(Constants.FILTERS);
+
+        filtersController = new FiltersController(this.getContext(), filterSettings);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(filtersController.getAdapter());
 
@@ -52,10 +61,22 @@ public class FilterFragment extends Fragment {
                 filterSettings.getAllOrderings());
         orderAdapter.notifyDataSetChanged();
         spinner.setAdapter(orderAdapter);
+
+        spinner.setSelection(filterSettings.sortOrder.ordinal());
+        spinner.setOnItemSelectedListener(filtersController);
         return view;
     }
 
-    public static Fragment newInstance() {
-        return new FilterFragment();
+    public static Fragment newInstance(FilterSettings filterSettings) {
+        FilterFragment filterFragment = new FilterFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.FILTERS, filterSettings);
+        filterFragment.setArguments(bundle);
+        return filterFragment;
+    }
+
+    @OnClick(R.id.saveButton)
+    protected void onSave() {
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 }
