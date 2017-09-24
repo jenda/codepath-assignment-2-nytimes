@@ -15,6 +15,7 @@ import android.widget.Spinner;
 
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
+import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.utils.Constants;
 
@@ -78,5 +79,10 @@ public class FilterFragment extends Fragment {
     @OnClick(R.id.saveButton)
     protected void onSave() {
         getActivity().getSupportFragmentManager().popBackStack();
+        onFiltersSaved();
+    }
+
+    private void onFiltersSaved() {
+        DataProvider.INSTANCE.fetchNew(filterSettings);
     }
 }

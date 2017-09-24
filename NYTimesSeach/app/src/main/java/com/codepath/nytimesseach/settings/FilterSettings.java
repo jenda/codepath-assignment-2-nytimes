@@ -93,6 +93,14 @@ public class FilterSettings implements Serializable {
         return selectedNewsDesks.remove(newsDesk);
     }
 
+    public boolean hasSelectedNewsDesks() {
+        return !selectedNewsDesks.isEmpty();
+    }
+
+    public Set<NewsDesk> getSelectedNewsDesks() {
+        return selectedNewsDesks;
+    }
+
     public static FilterSettings INSTANCE = new FilterSettings();
 
     public static FilterSettings getEmptyFilters() {

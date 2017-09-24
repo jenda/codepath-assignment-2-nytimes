@@ -18,5 +18,6 @@ public interface NYTimesEndpointInterface {
     @GET("svc/search/v2/articlesearch.json")
     Call<Response> getDocs(@Query("q") String query,
                            @Query("page") int page,
-                           @Query("api-key") String apiKey);
+                           @Query("api-key") String apiKey,
+                           @Query("fq") String fq);
 }

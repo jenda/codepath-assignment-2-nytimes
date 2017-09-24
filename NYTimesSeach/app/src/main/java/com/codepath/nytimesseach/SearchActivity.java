@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements DataProvider.DataFetchedListener {
 
     @BindView(R.id.searchButton)
     Button searchButton;
@@ -73,7 +73,9 @@ public class SearchActivity extends AppCompatActivity {
 
         articlesAdapter.notifyDataSetChanged();
 //        searchButtonClicked();
-        new DataProvider ().fetchMoreInitial();
+        DataProvider.INSTANCE = new DataProvider(this);
+//        DataProvider.INSTANCE
+        DataProvider.INSTANCE.fetchMoreInitial();
 
     }
 
@@ -138,7 +140,6 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-
     private void transitionToModal(Fragment newFragment) {
         FragmentTransaction fragmentTransaction;
         fragmentTransaction = getSupportFragmentManager().beginTransaction()
@@ -149,5 +150,12 @@ public class SearchActivity extends AppCompatActivity {
                 .add(R.id.modal_container, newFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onDataFetched(List<Document> docs) {
+        documents.clear();
+        documents.addAll(docs);
+        articlesAdapter.notifyDataSetChanged();
     }
 }
