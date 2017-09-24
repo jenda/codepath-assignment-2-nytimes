@@ -57,10 +57,17 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
             holder.previewImageView.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(Uri.parse(document.getThumbnailOrImage()))
-                    .placeholder(R.drawable.ic_nocover)
+//                    .placeholder(R.drawable.ic_nocover)
                     .into(holder.previewImageView);
         } else {
             holder.previewImageView.setVisibility(View.GONE);
+        }
+
+        if (document.getPubDate() != null) {
+            holder.pubDateTextView.setVisibility(View.VISIBLE);
+            holder.pubDateTextView.setText("Pub: " + document.getPubDate().split("T")[0]);
+        } else {
+            holder.pubDateTextView.setVisibility(View.GONE);
         }
     }
 
@@ -82,6 +89,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
 
         @BindView(R.id.newsDeskTextView)
         protected TextView newsDeskTextView;
+
+        @BindView(R.id.pubDateTextView)
+        protected TextView pubDateTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
