@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This needs a duration of 1 or else Android will ignore it completely -->
+<alpha xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/decelerate_quad"
+    android:fromAlpha="1.0" android:toAlpha="1.0"
+    android:startOffset="@integer/fragment_transition_duration_long_ms"
+    android:duration="1"/>

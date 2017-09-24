@@ -1,6 +1,8 @@
 package com.codepath.nytimesseach;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codepath.nytimesseach.fragments.FilterFragment;
 import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
 import com.loopj.android.http.AsyncHttpClient;
@@ -38,6 +41,9 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.resultsRecyclerView)
     RecyclerView resultsRecyclerView;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private ArticlesAdapter articlesAdapter;
     private List<Document> documents;
@@ -62,6 +68,7 @@ public class SearchActivity extends AppCompatActivity {
         resultsRecyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         articlesAdapter.notifyDataSetChanged();
+        searchButtonClicked();
 
     }
 
@@ -83,6 +90,13 @@ public class SearchActivity extends AppCompatActivity {
 //        if (id == R.id.action_settings) {
 //            return true;
 //        }
+        if (id == R.id.action_filter) {
+            Log.d("jenda", "filter button clicked");
+            transitionToModal(FilterFragment.newInstance());
+            return true;
+        } else if (id == R.id.action_search) {
+            Log.d("jenda", "search button clicked");
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -113,6 +127,26 @@ public class SearchActivity extends AppCompatActivity {
                 documents.addAll(resp.getResponse().getDocs());
                 articlesAdapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                Log.d("");
+                throwable.printStackTrace();
+            }
+
         });
+    }
+
+
+    private void transitionToModal(Fragment newFragment) {
+        FragmentTransaction fragmentTransaction;
+        fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_bottom, R.anim.fragment_slide_delay,
+                        0, R.anim.exit_bottom);
+
+        fragmentTransaction
+                .add(R.id.modal_container, newFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
