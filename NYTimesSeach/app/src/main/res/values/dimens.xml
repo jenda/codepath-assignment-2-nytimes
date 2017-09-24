@@ -4,5 +4,7 @@
     <dimen name="news_desk_text_size">14dp</dimen>
     <dimen name="article_item_padding">10dp</dimen>
     <dimen name="news_desk_padding">3dp</dimen>
+    <dimen name="news_desk_margin">3dp</dimen>
     <dimen name="news_desk_left_margin">10dp</dimen>
+    <dimen name="article_outer_layout_margin">5dp</dimen>
 </resources>
