@@ -1,4 +1,4 @@
-package com.codepath.nytimesseach;
+package com.codepath.nytimesseach.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.codepath.nytimesseach.R;
+import com.codepath.nytimesseach.adapters.ArticlesAdapter;
 import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.fragments.WebViewArticleFragment;
 import com.codepath.nytimesseach.fragments.FilterFragment;
@@ -26,7 +28,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchActivity extends AppCompatActivity implements DataProvider.DataFetchedListener, ItemClickSupport.OnItemClickListener {
+public class SearchActivity extends AppCompatActivity implements
+        DataProvider.DataFetchedListener, ItemClickSupport.OnItemClickListener {
 
 //    @BindView(R.id.searchButton)
 //    Button searchButton;

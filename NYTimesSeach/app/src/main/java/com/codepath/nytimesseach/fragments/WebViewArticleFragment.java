@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public class WebViewArticleFragment extends Fragment {
     private Document document;
 
     @BindView(R.id.webview)
-    private WebView webview;
+    protected WebView webview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,6 +44,14 @@ public class WebViewArticleFragment extends Fragment {
         // Configure the client to use when opening URLs
         webview.setWebViewClient(new OverridingWebViewClient());
 
+        // Zooming and layout responsiveness.
+//        webview.getSettings().setUseWideViewPort(true);
+//        webview.getSettings().setLoadWithOverviewMode(true);
+//        webview.getSettings().setSupportZoom(true);
+//        webview.getSettings().setBuiltInZoomControls(true);
+//        webview.getSettings().setDisplayZoomControls(false);
+
+        Log.d("jenda", "weburl: " + document.getWebUrl());
         // Load the initial URL
         webview.loadUrl(document.getWebUrl());
         return view;
@@ -55,7 +64,6 @@ public class WebViewArticleFragment extends Fragment {
         webViewArticleFragment.setArguments(bundle);
         return webViewArticleFragment;
     }
-
 
     private class OverridingWebViewClient extends WebViewClient {
         @SuppressWarnings("deprecation")

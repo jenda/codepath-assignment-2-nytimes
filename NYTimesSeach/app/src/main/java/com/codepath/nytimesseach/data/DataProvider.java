@@ -6,8 +6,10 @@ import android.util.StringBuilderPrinter;
 import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
 import com.codepath.nytimesseach.settings.FilterSettings;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +22,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DataProvider {
 
+    private static Set<String> BLACK_LISTED_IDS = ImmutableSet.of(
+            "56e0ea3e38f0d80718d563b2",
+            "527ac73a38f0d86606634041");
 
     public static interface DataFetchedListener {
         public void onDataFetched(List<Document> docs);

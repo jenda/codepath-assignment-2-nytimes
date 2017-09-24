@@ -1,4 +1,4 @@
-package com.codepath.nytimesseach;
+package com.codepath.nytimesseach.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,14 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.model.Document;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by jan_spidlen on 9/22/17.
