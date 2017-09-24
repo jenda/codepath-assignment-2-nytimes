@@ -16,6 +16,8 @@ import android.webkit.WebViewClient;
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.model.Document;
 
+import org.parceler.Parcels;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,7 +38,7 @@ public class WebViewArticleFragment extends Fragment {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_web_view_article,
                 container, false);
         ButterKnife.bind(this, view);
-        document = (Document)this.getArguments().getSerializable(DOC_ID);
+        document = (Document)Parcels.unwrap(this.getArguments().getParcelable(DOC_ID));
 
         webview.getSettings().setLoadsImagesAutomatically(true);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -60,7 +62,8 @@ public class WebViewArticleFragment extends Fragment {
     public static WebViewArticleFragment newInstance(Document document) {
         WebViewArticleFragment webViewArticleFragment = new WebViewArticleFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(DOC_ID, document);
+//        bundle.putSerializable(DOC_ID, document);
+        bundle.putParcelable(DOC_ID, Parcels.wrap(document));
         webViewArticleFragment.setArguments(bundle);
         return webViewArticleFragment;
     }

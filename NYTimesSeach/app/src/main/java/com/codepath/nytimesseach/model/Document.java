@@ -2,6 +2,8 @@ package com.codepath.nytimesseach.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -11,51 +13,40 @@ import java.util.Map;
  * Created by jan_spidlen on 9/20/17.
  */
 
+@Parcel
 public class Document implements Serializable {
 
     @SerializedName("web_url")
-    private
     String webUrl;
 
-    private String snippet;
-    private Object blog;
-    private String source;
-    private List<Multimedia> multimedia;
-    private Headline headline;
-    private List<Object> keywords;
+    String snippet;
+    String source;
+    List<Multimedia> multimedia;
+    Headline headline;
 
     @SerializedName("pub_date")
-    private
     String pubDate;
 
     @SerializedName("document_type")
-    private
     String documentType;
 
     @SerializedName("new_desk")
-    private
     String newsDesk;
 
     @SerializedName("section_name")
-    private
     String sectionName;
 
-    private Object byline;
-
     @SerializedName("type_of_material")
-    private
     String typeOfMaterial;
 
     @SerializedName("_id")
-    private
     String id;
 
     @SerializedName("word_count")
-    private
     int wordCount;
 
-    private double score;
-    private String uri;
+    double score;
+    String uri;
 
     public String getWebUrl() {
         return webUrl;
@@ -63,10 +54,6 @@ public class Document implements Serializable {
 
     public String getSnippet() {
         return snippet;
-    }
-
-    public Object getBlog() {
-        return blog;
     }
 
     public String getSource() {
@@ -81,9 +68,6 @@ public class Document implements Serializable {
         return headline;
     }
 
-    public List<Object> getKeywords() {
-        return keywords;
-    }
 
     public String getPubDate() {
         return pubDate;
@@ -99,10 +83,6 @@ public class Document implements Serializable {
 
     public String getSectionName() {
         return sectionName;
-    }
-
-    public Object getByline() {
-        return byline;
     }
 
     public String getTypeOfMaterial() {
@@ -132,7 +112,7 @@ public class Document implements Serializable {
 
         final Map<String, String> subTypesToUrls = new HashMap<>();
 
-        for(Multimedia multimedia: getMultimedia()) {
+        for (Multimedia multimedia : getMultimedia()) {
             if (multimedia.getType().equals("image")) {
                 subTypesToUrls.put(multimedia.getSubtype(), multimedia.getUrl());
             }

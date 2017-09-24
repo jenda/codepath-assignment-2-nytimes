@@ -2,16 +2,18 @@ package com.codepath.nytimesseach.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by jan_spidlen on 9/22/17.
  */
 
+@Parcel
 public class Headline {
 
-    private String main;
+    String main;
 
     @SerializedName("print_headline")
-    private
     String printHeadline;
 
     public String getMain() {
