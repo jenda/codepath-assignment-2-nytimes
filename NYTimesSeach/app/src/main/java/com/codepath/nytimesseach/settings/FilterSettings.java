@@ -17,6 +17,7 @@ public class FilterSettings {
     };
 
     static enum NewsDesk {
+        None("None"),
         ARTS("Arts"),
         SPORTS("Sports");
 
@@ -39,7 +40,8 @@ public class FilterSettings {
     public Date beginDate;
 
     public static FilterSettings INSTANCE = new FilterSettings();
-//    static FilterSettings getInstance() {
-//
-//    }
+
+    public static FilterSettings getEmptyFilters() {
+        return new FilterSettings();
+    }
 }

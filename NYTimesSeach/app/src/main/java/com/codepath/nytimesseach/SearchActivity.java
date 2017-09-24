@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.codepath.nytimesseach.data.DataProvider;
 import com.codepath.nytimesseach.fragments.FilterFragment;
 import com.codepath.nytimesseach.model.Document;
 import com.codepath.nytimesseach.model.Response;
@@ -68,7 +69,8 @@ public class SearchActivity extends AppCompatActivity {
         resultsRecyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         articlesAdapter.notifyDataSetChanged();
-        searchButtonClicked();
+//        searchButtonClicked();
+        new DataProvider ().fetchMoreInitial();
 
     }
 
@@ -86,10 +88,6 @@ public class SearchActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
         if (id == R.id.action_filter) {
             Log.d("jenda", "filter button clicked");
             transitionToModal(FilterFragment.newInstance());
