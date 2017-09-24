@@ -40,8 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchActivity extends AppCompatActivity implements
-        DataFetchedListener, ItemClickSupport.OnItemClickListener, ItemClickSupport.OnItemLongClickListener {
+public class SearchActivity extends AppCompatActivity implements DataFetchedListener {
 
     @BindView(R.id.resultsRecyclerView)
     RecyclerView resultsRecyclerView;
@@ -83,8 +82,26 @@ public class SearchActivity extends AppCompatActivity implements
         DataProvider.INSTANCE = new DataProvider(this);
         DataProvider.INSTANCE.fetchMoreInitial();
 
-        ItemClickSupport.addTo(resultsRecyclerView).setOnItemClickListener(this);
-        ItemClickSupport.addTo(resultsRecyclerView).setOnItemLongClickListener(this);
+        ItemClickSupport.addTo(resultsRecyclerView).setOnItemClickListener(
+                (RecyclerView recyclerView, int position, View v) -> {
+            Document doc = documents.get(position);
+            Log.d("jenda", "Opening doc: " + doc.getSnippet());
+            transitionToModal(WebViewArticleFragment.newInstance(doc));
+        });
+
+        ItemClickSupport.addTo(resultsRecyclerView).setOnItemLongClickListener(
+                (RecyclerView recyclerView, int position, View v) -> {
+            Document doc = documents.get(position);
+
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, doc.getWebUrl());
+            shareIntent.setType("text/plain");
+            startActivity(Intent.createChooser(shareIntent,
+                    getResources().getString(R.string.share_link)));
+
+            return true;
+        });
 
         endlessRecyclerViewScrollListener =
                 new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
@@ -183,24 +200,4 @@ public class SearchActivity extends AppCompatActivity implements
         snackbar.show();
     }
 
-    @Override
-    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-        Document doc = documents.get(position);
-        Log.d("jenda", "Opening doc: " + doc.getSnippet());
-        transitionToModal(WebViewArticleFragment.newInstance(doc));
-    }
-
-    @Override
-    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-        Document doc = documents.get(position);
-
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, doc.getWebUrl());
-        shareIntent.setType("text/plain");
-        startActivity(Intent.createChooser(shareIntent,
-                getResources().getString(R.string.share_link)));
-
-        return true;
-    }
 }
