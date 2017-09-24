@@ -1,5 +1,6 @@
 package com.codepath.nytimesseach.data;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.codepath.nytimesseach.R;
@@ -9,6 +10,7 @@ import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.utils.Utils;
 import com.google.common.collect.ImmutableSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -67,7 +69,7 @@ public class DataProvider {
         dataDownloadedSoFar.clear();
     }
 
-    private String buildFG(FilterSettings settings) {
+    private String buildFilterQuery(FilterSettings settings) {
         StringBuilder sb = new StringBuilder();
         if (settings.hasSelectedNewsDesks()) {
             sb.append("news_desk:(");
@@ -78,7 +80,6 @@ public class DataProvider {
             }
             sb.append(")");
         }
-        // TODO: finish data and sorting.
 
         String fg = sb.toString();
         if (fg == null || "".equals(fg)) {
@@ -107,6 +108,18 @@ public class DataProvider {
         }
         fetchMore(currentPage, settings);
     }
+
+    @Nullable
+    private String buildBeginDate(FilterSettings settings) {
+        return settings.getBeginDate() == null ?
+                null : new SimpleDateFormat("yyyyMMdd").format(settings.getBeginDate());
+    }
+
+    @Nullable
+    private String buildFetchOrder(FilterSettings settings) {
+        return settings.sortOrder == FilterSettings.SortOrder.OldestFirst ? "oldest" : null;
+    }
+
     public synchronized void fetchMore(int page, FilterSettings settings) {
         if ("".equals(query)) {
             query = null;
@@ -116,20 +129,23 @@ public class DataProvider {
             return;
         }
 
+        // This should make sure that we have at most one request in progress.
         if (call != null && !call.isExecuted() && !call.isCanceled()) {
-            Log.d("jenda", "returning");
+            Log.d("jenda", "Query in progress");
             return;
         }
 
-        String fg = buildFG(settings);
-
+        String filterQuery = buildFilterQuery(settings);
+        String beginDate = buildBeginDate(settings);
+        String fetchOrder = buildFetchOrder(settings);
         Log.d("jenda:", "page " +  page + "");
-        Log.d("jenda:", "fg " +  fg + "");
+        Log.d("jenda:", "fg " +  filterQuery + "");
+        Log.d("jenda:", "beginDate " +  beginDate + "");
         Log.d("jenda:", "query " +  query + "");
 
         final RetryCounter retryCounter = new RetryCounter();
 
-        call = apiService.getDocs(query, page, API_KEY, fg);
+        call = apiService.getDocs(query, page, fetchOrder, beginDate , API_KEY, filterQuery);
         call.enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
@@ -141,6 +157,8 @@ public class DataProvider {
                         return;
                     }
                     try {
+                        // Some backoff.
+                        // TODO: make it exponential maybe.
                         Thread.currentThread().sleep(retryCounter.counter * 500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -155,10 +173,10 @@ public class DataProvider {
                 Response internalResponse = response.body();
                 List<Document> docs = internalResponse.getResponse().getDocs();
 
-//                Log.d("jenda", "isSuccess: " + response.isSuccessful() + "");
-//                Log.d("jenda", "code: " + response.code() + "");
-//                Log.d("jenda", internalResponse.getStatus());
-//                Log.d("jenda", "size: " + internalResponse.getResponse().getDocs().size());
+                Log.d("jenda", "isSuccess: " + response.isSuccessful() + "");
+                Log.d("jenda", "code: " + response.code() + "");
+                Log.d("jenda", internalResponse.getStatus());
+                Log.d("jenda", "size: " + internalResponse.getResponse().getDocs().size());
                 // Dedup and filter out known bad articles.
                 for(Document doc: docs) {
                     if (!BLACK_LISTED_IDS.contains(doc.getId())
