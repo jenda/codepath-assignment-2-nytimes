@@ -1,8 +1,5 @@
 package com.codepath.nytimesseach.settings;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +19,14 @@ public class FilterSettings implements Serializable {
 
     public static SortOrder[] getAllOrderings() {
         return SortOrder.values();
+    }
+
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(SortOrder sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public static enum SortOrder {
@@ -63,6 +68,9 @@ public class FilterSettings implements Serializable {
     }
 
     private List<NewsDesk> allowedNewsDesks = new ArrayList<>();
+    private SortOrder sortOrder = SortOrder.NewestFirst;
+    private Date beginDate = null;
+    private Set<NewsDesk> selectedNewsDesks = new HashSet<>();
 
     @Inject
     public FilterSettings() {
@@ -72,19 +80,12 @@ public class FilterSettings implements Serializable {
                allowedNewsDesks.add(newsDesk);
            }
        }
-
-        selectedNewsDesks = new HashSet<>();
-        sortOrder = SortOrder.NewestFirst;
-        beginDate = null;
     }
 
     public List<NewsDesk> getAllowedNewsDesks() {
         return this.allowedNewsDesks;
     }
 
-    public SortOrder sortOrder;
-
-    private Date beginDate;
 
     public void setBeginDate(Date date) {
         this.beginDate = date;
@@ -93,8 +94,6 @@ public class FilterSettings implements Serializable {
     public Date getBeginDate() {
         return beginDate;
     }
-
-    private Set<NewsDesk> selectedNewsDesks;
 
     public boolean isSelected(NewsDesk newsDesk) {
         return selectedNewsDesks.contains(newsDesk);
@@ -115,8 +114,6 @@ public class FilterSettings implements Serializable {
     public Set<NewsDesk> getSelectedNewsDesks() {
         return selectedNewsDesks;
     }
-
-//    public static FilterSettings INSTANCE = new FilterSettings();
 
     public static FilterSettings getEmptyFilters() {
         return new FilterSettings();

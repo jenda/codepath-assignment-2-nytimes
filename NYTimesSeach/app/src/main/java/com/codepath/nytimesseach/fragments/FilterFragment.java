@@ -8,7 +8,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
 import com.codepath.nytimesseach.data.DataFetcher;
 import com.codepath.nytimesseach.settings.FilterSettings;
-import com.codepath.nytimesseach.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,7 +93,7 @@ public class FilterFragment extends BaseFragment {
         orderAdapter.notifyDataSetChanged();
         orderPicker.setAdapter(orderAdapter);
 
-        orderPicker.setSelection(filterSettings.sortOrder.ordinal());
+        orderPicker.setSelection(filterSettings.getSortOrder().ordinal());
         orderPicker.setOnItemSelectedListener(filtersController);
 
         maybeUpdateDateLabel();

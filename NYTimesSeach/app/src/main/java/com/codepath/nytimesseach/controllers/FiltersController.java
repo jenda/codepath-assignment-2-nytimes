@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 
-import com.airbnb.epoxy.Typed2EpoxyController;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.viewmodels.EpoxyCheckBoxModel_;
@@ -40,7 +39,7 @@ public class FiltersController extends TypedEpoxyController<FilterSettings>
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        filterSettings.sortOrder = FilterSettings.getAllOrderings()[position];
+        filterSettings.setSortOrder(FilterSettings.getAllOrderings()[position]);
     }
 
     @Override

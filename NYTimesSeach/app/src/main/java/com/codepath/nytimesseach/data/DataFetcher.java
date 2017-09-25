@@ -123,7 +123,7 @@ public class DataFetcher {
 
     @Nullable
     private String buildFetchOrder(FilterSettings settings) {
-        return settings.sortOrder == FilterSettings.SortOrder.OldestFirst ? "oldest" : null;
+        return settings.getSortOrder() == FilterSettings.SortOrder.OldestFirst ? "oldest" : null;
     }
 
     public synchronized void fetchMore(int page, FilterSettings settings) {
