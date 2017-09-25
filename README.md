@@ -49,7 +49,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://www.dropbox.com/s/9dw3nv3wkfnd3rl/assignment-2-nyt-browser-2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+[link](https://www.dropbox.com/s/9dw3nv3wkfnd3rl/assignment-2-nyt-browser-2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
