@@ -163,7 +163,6 @@ public class DataFetcher {
                         return;
                     }
                     try {
-                        // Some backoff.
                         // TODO: make it exponential maybe.
                         Thread.currentThread().sleep(retryCounter.counter * 500);
                     } catch (InterruptedException e) {

@@ -16,7 +16,6 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         component = DaggerNYTimesComponent.create();
-
     }
 
     public NYTimesComponent getNetComponent() {
