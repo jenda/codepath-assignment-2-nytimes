@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -26,7 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by jan_spidlen on 9/23/17.
  */
 
-public class DataProvider {
+@Singleton
+public class DataFetcher {
 
     class RetryCounter {
         int counter;
@@ -36,7 +40,7 @@ public class DataProvider {
             "56e0ea3e38f0d80718d563b2",
             "527ac73a38f0d86606634041");
 
-    public static final String BASE_URL = "http://api.nytimes.com/";
+    private static final String BASE_URL = "http://api.nytimes.com/";
     private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -47,9 +51,7 @@ public class DataProvider {
 
     private static String API_KEY = "8f987ade9ab543b782fdeb6dad48ada1";
 
-    public static DataProvider INSTANCE;//= new DataProvider(dataFetchedListener);
-
-    private final DataFetchedListener dataFetchedListener;
+    private DataFetchedListener dataFetchedListener;
     private final List<Document> dataDownloadedSoFar = new ArrayList<>();
     private final Set<String> idsDownloadedSoFar = new HashSet<>();
     private int currentPage = 0;
@@ -58,9 +60,8 @@ public class DataProvider {
     private long lastAttempt = System.currentTimeMillis();
     private String query = null;
 
-    public DataProvider(DataFetchedListener dataFetchedListener) {
-        this.dataFetchedListener = dataFetchedListener;
-    }
+    @Inject
+    public DataFetcher() {}
 
     private void clearBuffers() {
         hasMore = true;
@@ -86,6 +87,11 @@ public class DataProvider {
             return null;
         }
         return fg;
+    }
+
+
+    public void setDataFetchedListener(DataFetchedListener dataFetchedListener) {
+        this.dataFetchedListener = dataFetchedListener;
     }
 
     public synchronized void setQuery(String query) {

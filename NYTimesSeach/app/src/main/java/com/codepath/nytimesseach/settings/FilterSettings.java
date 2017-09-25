@@ -10,10 +10,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by jan_spidlen on 9/23/17.
  */
 
+@Singleton
 public class FilterSettings implements Serializable {
 
     public static SortOrder[] getAllOrderings() {
@@ -59,6 +63,8 @@ public class FilterSettings implements Serializable {
     }
 
     private List<NewsDesk> allowedNewsDesks = new ArrayList<>();
+
+    @Inject
     public FilterSettings() {
        for(int i = 0; i <  NewsDesk.values().length; i++) {
            final NewsDesk newsDesk = NewsDesk.values()[i];
@@ -110,7 +116,7 @@ public class FilterSettings implements Serializable {
         return selectedNewsDesks;
     }
 
-    public static FilterSettings INSTANCE = new FilterSettings();
+//    public static FilterSettings INSTANCE = new FilterSettings();
 
     public static FilterSettings getEmptyFilters() {
         return new FilterSettings();

@@ -1,7 +1,6 @@
 package com.codepath.nytimesseach.fragments;
 
 //import android.app.Fragment;
-import android.app.DatePickerDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,37 +15,34 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.controllers.FiltersController;
-import com.codepath.nytimesseach.data.DataProvider;
+import com.codepath.nytimesseach.data.DataFetcher;
 import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.utils.Utils;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemSelected;
 
 /**
  * Created by jan_spidlen on 9/23/17.
  */
 
-public class FilterFragment extends Fragment {
+public class FilterFragment extends BaseFragment {
 
-    public static Fragment newInstance(FilterSettings filterSettings) {
+    public static Fragment newInstance() {
         FilterFragment filterFragment = new FilterFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Utils.FILTERS, filterSettings);
         filterFragment.setArguments(bundle);
         return filterFragment;
     }
@@ -70,7 +66,11 @@ public class FilterFragment extends Fragment {
 
     ArrayAdapter orderAdapter;
     FiltersController filtersController;
+
+    @Inject
     FilterSettings filterSettings;
+    @Inject
+    DataFetcher dataFetcher;
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -82,7 +82,7 @@ public class FilterFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        filterSettings = (FilterSettings)this.getArguments().getSerializable(Utils.FILTERS);
+        getComponent().inject(this);
 
         filtersController = new FiltersController(this.getContext(), filterSettings);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -137,6 +137,6 @@ public class FilterFragment extends Fragment {
     }
 
     private void onFiltersSaved() {
-        DataProvider.INSTANCE.fetchFresh(filterSettings);
+        dataFetcher.fetchFresh(filterSettings);
     }
 }

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -17,14 +16,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.codepath.nytimesseach.MyApp;
 import com.codepath.nytimesseach.R;
 import com.codepath.nytimesseach.adapters.ArticlesAdapter;
 import com.codepath.nytimesseach.controllers.EndlessRecyclerViewScrollListener;
+import com.codepath.nytimesseach.dagger.DaggerNYTimesComponent;
 import com.codepath.nytimesseach.data.DataFetchedListener;
-import com.codepath.nytimesseach.data.DataProvider;
+import com.codepath.nytimesseach.data.DataFetcher;
 import com.codepath.nytimesseach.fragments.WebViewArticleFragment;
 import com.codepath.nytimesseach.fragments.FilterFragment;
 import com.codepath.nytimesseach.model.Document;
@@ -32,10 +32,11 @@ import com.codepath.nytimesseach.settings.FilterSettings;
 import com.codepath.nytimesseach.utils.ItemClickSupport;
 import com.codepath.nytimesseach.utils.Utils;
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.common.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,12 +57,22 @@ public class SearchActivity extends AppCompatActivity implements DataFetchedList
     private List<Document> documents;
     EndlessRecyclerViewScrollListener endlessRecyclerViewScrollListener;
 
+    @Inject
+    FilterSettings filterSettings;
+
+    @Inject
+    DataFetcher dataFetcher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+        ((MyApp)getApplication()).getNetComponent().inject(this);
+
+
+        Log.d("jenda", "filterSettings " + filterSettings);
 
         setSupportActionBar(toolbar);
 
@@ -79,8 +90,9 @@ public class SearchActivity extends AppCompatActivity implements DataFetchedList
         resultsRecyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         articlesAdapter.notifyDataSetChanged();
-        DataProvider.INSTANCE = new DataProvider(this);
-        DataProvider.INSTANCE.fetchMoreInitial();
+
+        dataFetcher.setDataFetchedListener(this);
+        dataFetcher.fetchMoreInitial();
 
         ItemClickSupport.addTo(resultsRecyclerView).setOnItemClickListener(
                 (RecyclerView recyclerView, int position, View v) -> {
@@ -108,7 +120,7 @@ public class SearchActivity extends AppCompatActivity implements DataFetchedList
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.d("jenda", "onLoadMore");
-                DataProvider.INSTANCE.fetchMore(FilterSettings.INSTANCE);
+                dataFetcher.fetchMore(filterSettings);
             }
         };
 
@@ -125,8 +137,8 @@ public class SearchActivity extends AppCompatActivity implements DataFetchedList
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                DataProvider.INSTANCE.setQuery(query);
-                DataProvider.INSTANCE.fetchFresh(FilterSettings.INSTANCE);
+                dataFetcher.setQuery(query);
+                dataFetcher.fetchFresh(filterSettings);
                 // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                 // see https://code.google.com/p/android/issues/detail?id=24599
                 searchView.clearFocus();
@@ -136,8 +148,8 @@ public class SearchActivity extends AppCompatActivity implements DataFetchedList
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText == null || newText.equals("")) {
-                    DataProvider.INSTANCE.setQuery(null);
-                    DataProvider.INSTANCE.fetchFresh(FilterSettings.INSTANCE);
+                    dataFetcher.setQuery(null);
+                    dataFetcher.fetchFresh(filterSettings);
                 }
                 return false;
             }
@@ -147,17 +159,12 @@ public class SearchActivity extends AppCompatActivity implements DataFetchedList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_filter) {
-            Log.d("jenda", "filter button clicked");
-            transitionToModal(FilterFragment.newInstance(FilterSettings.INSTANCE));
+            transitionToModal(FilterFragment.newInstance());
             return true;
         } else if (id == R.id.action_search) {
-            Log.d("jenda", "search button clicked");
         }
 
         return super.onOptionsItemSelected(item);
